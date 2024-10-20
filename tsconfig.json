@@ -2,12 +2,19 @@
     "compilerOptions": {
         "target": "ES6",
         "module": "commonjs",
+        "lib": ["es6", "dom"],
         "strict": true,
+        "moduleResolution": "node",      // Ensure this is set to 'node'
         "esModuleInterop": true,
         "skipLibCheck": true, // This can help avoid type checking issues in third-party libraries
         "forceConsistentCasingInFileNames": true,
+        "outDir": "./dist", // Make sure to specify the output directory
         "experimentalDecorators": true, // Required for decorators
-        "emitDecoratorMetadata": true // Required for decorators
-      }
+        "emitDecoratorMetadata": true, // Required for decorators  // Specify the output directory for compiled files
+        "rootDir": "./src" 
+      },
+      "include": [
+    "src/**/*.ts" // Ensure this is at the root level, not inside compilerOptions
+  ]
   }
   

@@ -1,22 +1,23 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, BaseEntity } from 'typeorm';
+import mongoose, { Document, Schema } from 'mongoose';
 
-@Entity('users')
-export class User extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id!: number;
-
-  @Column()
-  name!: string;
-
-  @Column({ unique: true })
-  email!: string;
-
-  @Column()
-  password!: string;
-
-  @Column({ default: 'user' })
-  role!: string;
-
-  @CreateDateColumn()
-  createdAt!: Date;
+export interface IUser extends Document {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+  createdAt: Date;
 }
+
+const userSchema = new Schema<IUser>({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  role: { type: String, default: 'user' },
+  createdAt: { type: Date, default: Date.now },
+});
+
+// Create the User model
+const User = mongoose.model<IUser>('User', userSchema);
+
+export default User;

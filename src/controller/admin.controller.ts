@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import bcrypt from 'bcryptjs';
-import { User } from '../models/user.model';
+import * as bcrypt from 'bcryptjs';
+import User, { IUser } from '../models/user.model'; // Adjust import based on your user model path
 
 // Create User (Admin Only)
 export const createUser = async (req: Request, res: Response) => {
@@ -8,11 +8,12 @@ export const createUser = async (req: Request, res: Response) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   try {
-    const newUser = new User();
-    newUser.name = name;
-    newUser.email = email;
-    newUser.password = hashedPassword;
-    newUser.role = role;
+    const newUser = new User({
+      name,
+      email,
+      password: hashedPassword,
+      role,
+    });
 
     await newUser.save();
     res.status(201).json({ message: 'User created successfully' });
@@ -24,17 +25,17 @@ export const createUser = async (req: Request, res: Response) => {
 // Get All Users (Paginated & Filtered)
 export const getUsers = async (req: Request, res: Response) => {
   const { page = 1, limit = 10, role, name, email } = req.query;
-  
+
   const skip = (Number(page) - 1) * Number(limit);
 
   try {
-    const query = User.createQueryBuilder('user');
+    const query: any = {}; // Build a query object
 
-    if (role) query.andWhere('user.role = :role', { role });
-    if (name) query.andWhere('user.name LIKE :name', { name: `%${name}%` });
-    if (email) query.andWhere('user.email LIKE :email', { email: `%${email}%` });
+    if (role) query.role = role;
+    if (name) query.name = { $regex: name, $options: 'i' }; // Case-insensitive regex
+    if (email) query.email = { $regex: email, $options: 'i' };
 
-    const users = await query.skip(skip).take(Number(limit)).getMany();
+    const users = await User.find(query).skip(skip).limit(Number(limit));
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching users', error });
@@ -42,14 +43,16 @@ export const getUsers = async (req: Request, res: Response) => {
 };
 
 // Update User
-export const updateUser = async (req: Request, res: Response):Promise<void> => {
+export const updateUser = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   const { name, email, role } = req.body;
 
   try {
-    const adminId = parseInt(id,10)
-    const user = await User.findOne({where:{id:adminId}});
-    if (!user){ res.status(404).json({ message: 'User not found' }); return;}
+    const user = await User.findById(id);
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
 
     user.name = name || user.name;
     user.email = email || user.email;
@@ -63,18 +66,17 @@ export const updateUser = async (req: Request, res: Response):Promise<void> => {
 };
 
 // Delete User
-export const deleteUser = async (req: Request, res: Response):Promise<void> => {
-  let { id } = req.params;
+export const deleteUser = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
 
   try {
-    let adminId  = parseInt(id,10);
-    const user = await User.findOne({ where: { id: adminId } });
-    if (!user) { 
-      res.status(404).json({ message: 'User not found' })
-      return
-    };
+    const user = await User.findById(id);
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
 
-    await User.delete(id);
+    await User.findByIdAndDelete(id);
     res.json({ message: 'User deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Error deleting user', error });
