@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "module": "commonjs",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true, // This can help avoid type checking issues in third-party libraries
+        "forceConsistentCasingInFileNames": true,
+        "experimentalDecorators": true, // Required for decorators
+        "emitDecoratorMetadata": true // Required for decorators
+      }
+  }
+  
