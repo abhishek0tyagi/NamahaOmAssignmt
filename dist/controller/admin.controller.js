@@ -41,7 +41,7 @@ const user_model_1 = __importDefault(require("../models/user.model")); // Adjust
 // Create User (Admin Only)
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, email, password, role = 'user' } = req.body;
-    const hashedPassword = yield bcrypt.hash(password, 10);
+    const hashedPassword = yield bcrypt.hash(password, 10); //hashing password
     try {
         const newUser = new user_model_1.default({
             name,

@@ -22,6 +22,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -33,6 +42,7 @@ const bodyParser = __importStar(require("body-parser"));
 const user_routes_1 = __importDefault(require("./routes/user.routes"));
 const admin_routes_1 = __importDefault(require("./routes/admin.routes"));
 const mongoose = require("mongoose");
+const userServices_1 = require("./services/userServices");
 dotenv.config();
 const app = (0, express_1.default)();
 app.use(bodyParser.json());
@@ -42,7 +52,10 @@ app.use(bodyParser.json());
 // }).catch((error) => console.log('Database connection error:', error));
 mongoose
     .connect(process.env.MONGODB_URL)
-    .then(() => console.log("MongoDB connected..."))
+    .then(() => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("MongoDB connected...");
+    yield (0, userServices_1.fetchRecentUsers)();
+}))
     .catch((error) => console.error("MongoDB connection error:", error));
 // Log requests middleware (for skill evaluation)
 app.use((req, res, next) => {

@@ -4,7 +4,7 @@ import * as jwt from 'jsonwebtoken';
 import User, { IUser } from '../models/user.model'; // Adjust import based on your user model path
 
 // Register User
-export const registerUser = async (req: Request, res: Response) => {
+export const registerUser = async (req: Request, res: Response):Promise<void> => {
   const { name, email, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10); //hashing password
 
@@ -12,9 +12,10 @@ export const registerUser = async (req: Request, res: Response) => {
     // Check if the email already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: 'Email already in use' });
+     res.status(400).json({ message: 'Email already in use' });
+     return;
     }
-    
+
     const newUser = new User({
       name,
       email,

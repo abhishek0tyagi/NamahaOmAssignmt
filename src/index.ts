@@ -5,6 +5,7 @@ import * as bodyParser from 'body-parser';
 import userRoutes from './routes/user.routes';
 import adminRoutes from './routes/admin.routes';
 const mongoose = require("mongoose");
+import { fetchRecentUsers } from './services/userServices';
 
 
 dotenv.config();
@@ -18,7 +19,10 @@ app.use(bodyParser.json());
 // }).catch((error) => console.log('Database connection error:', error));
 mongoose
   .connect(process.env.MONGODB_URL)
-  .then(() => console.log("MongoDB connected..."))
+  .then(async() => {
+    console.log("MongoDB connected...")
+    await fetchRecentUsers();
+  })
   .catch((error:any) => console.error("MongoDB connection error:",error));
 
 // Log requests middleware (for skill evaluation)

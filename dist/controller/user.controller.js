@@ -42,12 +42,18 @@ const user_model_1 = __importDefault(require("../models/user.model")); // Adjust
 // Register User
 const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, email, password } = req.body;
-    const hashedPassword = yield bcrypt.hash(password, 10);
+    const hashedPassword = yield bcrypt.hash(password, 10); //hashing password
     try {
+        // Check if the email already exists
+        const existingUser = yield user_model_1.default.findOne({ email });
+        if (existingUser) {
+            res.status(400).json({ message: 'Email already in use' });
+            return;
+        }
         const newUser = new user_model_1.default({
             name,
             email,
-            password: hashedPassword,
+            password: hashedPassword
         });
         yield newUser.save();
         res.status(201).json({ message: 'User registered successfully' });
@@ -74,7 +80,7 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             return;
         }
         // Generate token
-        const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '24h' });
         res.json({ token });
         return;
     }
