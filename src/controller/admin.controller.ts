@@ -5,7 +5,7 @@ import User, { IUser } from '../models/user.model'; // Adjust import based on yo
 // Create User (Admin Only)
 export const createUser = async (req: Request, res: Response) => {
   const { name, email, password, role = 'user' } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(password, 10);     //hashing password
 
   try {
     const newUser = new User({

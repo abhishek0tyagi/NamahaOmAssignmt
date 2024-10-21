@@ -53,7 +53,7 @@ app.use((req, res, next) => {
 app.use('/api', user_routes_1.default);
 app.use('/api/admin', admin_routes_1.default);
 // Start server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5002;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });

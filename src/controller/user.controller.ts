@@ -3,29 +3,22 @@ import * as bcrypt from 'bcryptjs';     // Fix bcrypt import
 import * as jwt from 'jsonwebtoken';
 import User, { IUser } from '../models/user.model'; // Adjust import based on your user model path
 
-// Declare global interface for Express Request
-declare global {
-  namespace Express {
-    interface Request {
-      user?: {
-        id: string;
-        userId: string;
-        role: string;
-      };
-    }
-  }
-}
-
 // Register User
 export const registerUser = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(password, 10); //hashing password
 
   try {
+    // Check if the email already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email already in use' });
+    }
+    
     const newUser = new User({
       name,
       email,
-      password: hashedPassword,
+      password: hashedPassword
     });
 
     await newUser.save();
@@ -59,7 +52,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
     const token: string = jwt.sign(
       { userId: user._id, role: user.role },
       process.env.JWT_SECRET as string,
-      { expiresIn: '1h' }
+      { expiresIn: '24h' }
     );
 
     res.json({ token });
