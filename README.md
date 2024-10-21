@@ -30,7 +30,7 @@ Implementation: This service fetches users from the database using a date filter
 ## API Endpoints
 ###User Module Riutes
 -User Registration
-  POST /api/users/register
+  POST /api/register
   Request Body:
   json
   {
@@ -40,7 +40,7 @@ Implementation: This service fetches users from the database using a date filter
   }
 
 -User Login
-  POST /api/users/login
+  POST /api/login
   Request Body:
   json
   {
@@ -49,7 +49,7 @@ Implementation: This service fetches users from the database using a date filter
   }
   
 -Get User Profile
-  GET /api/users/profile
+  GET /api/profile
   Authorization: Bearer Token required in the header.
 
 

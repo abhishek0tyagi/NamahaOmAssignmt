@@ -22,7 +22,7 @@ const fetchRecentUsers = () => __awaiter(void 0, void 0, void 0, function* () {
         // Fetch users registered within the last 7 days
         const recentUsers = yield user_model_1.default.find({
             createdAt: { $gte: sevenDaysAgo },
-        }, { email: 1, createdAt: 1 });
+        }, { name: 1, _id: 0, email: 1, createdAt: 1 });
         // Log the recent users
         console.log('Users registered in the last 7 days:', recentUsers);
     }
