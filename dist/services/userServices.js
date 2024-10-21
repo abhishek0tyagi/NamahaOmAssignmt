@@ -17,13 +17,12 @@ const user_model_1 = __importDefault(require("../models/user.model"));
 const date_fns_1 = require("date-fns"); // You can use date-fns for date manipulation
 const fetchRecentUsers = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("am working");
         // Get the date 7 days ago from today
         const sevenDaysAgo = (0, date_fns_1.subDays)(new Date(), 7);
         // Fetch users registered within the last 7 days
         const recentUsers = yield user_model_1.default.find({
             createdAt: { $gte: sevenDaysAgo },
-        });
+        }, { email: 1, createdAt: 1 });
         // Log the recent users
         console.log('Users registered in the last 7 days:', recentUsers);
     }
