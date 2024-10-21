@@ -85,3 +85,16 @@ Response: 200 OK
 -DELETE /admin/users/:id
 Deletes a user by ID (admin only).
 Response: 200 OK
+
+
+####Project Setup
+-clone the Project 
+use git clone https://github.com/abhishek0tyagi/NamahaOmAssignmt.git
+
+-Install Dependencies
+npm install
+
+-Run application
+npm run start
+  
+--Note:check env variable once if server not start.
